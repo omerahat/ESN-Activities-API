@@ -1,0 +1,769 @@
+[
+    {
+        "event_name": "Adventure trip to Lofoten",
+        "organizer_section": "ESN Tromsø",
+        "event_date": {
+            "raw": "11/05/2026 - 16/05/2026",
+            "start": "2026-05-11",
+            "end": "2026-05-16"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-tromso",
+        "location": "Lofoten Islands, NO",
+        "event_page_link": "https://activities.esn.org/activity/adventure-trip-lofoten-43311"
+    },
+    {
+        "event_name": "Board Games",
+        "organizer_section": "ESN Tbilisi",
+        "event_date": {
+            "raw": "03/05/2026",
+            "start": "2026-05-03",
+            "end": "2026-05-03"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-tbilisi",
+        "location": "Tbilisi, GE",
+        "event_page_link": "https://activities.esn.org/activity/board-games-44848"
+    },
+    {
+        "event_name": "Paphos Trip 2026 (National trip)",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "01/05/2026 - 03/05/2026",
+            "start": "2026-05-01",
+            "end": "2026-05-03"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Paphos, CY",
+        "event_page_link": "https://activities.esn.org/activity/paphos-trip-2026-national-trip-45320"
+    },
+    {
+        "event_name": "Beer Pong Tournament Vol.4",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "30/04/2026",
+            "start": "2026-04-30",
+            "end": "2026-04-30"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/beer-pong-tournament-vol4-45316"
+    },
+    {
+        "event_name": "Erasmus Wednesdays - THE HANGOVER💸🎰",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "29/04/2026",
+            "start": "2026-04-29",
+            "end": "2026-04-29"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/erasmus-wednesdays-hangover-45337"
+    },
+    {
+        "event_name": "Lofoten",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "28/04/2026 - 04/05/2026",
+            "start": "2026-04-28",
+            "end": "2026-05-04"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Lofoten, NO",
+        "event_page_link": "https://activities.esn.org/activity/lofoten-42516"
+    },
+    {
+        "event_name": "Pub Quiz night",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "28/04/2026",
+            "start": "2026-04-28",
+            "end": "2026-04-28"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/pub-quiz-night-45317"
+    },
+    {
+        "event_name": "Sports Madness",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "25/04/2026",
+            "start": "2026-04-25",
+            "end": "2026-04-25"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/sports-madness-45319"
+    },
+    {
+        "event_name": "ESN x ACLO Football Tournament",
+        "organizer_section": "ESN Groningen",
+        "event_date": {
+            "raw": "24/04/2026",
+            "start": "2026-04-24",
+            "end": "2026-04-24"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-groningen",
+        "location": "Groningen, NL",
+        "event_page_link": "https://activities.esn.org/activity/esn-x-aclo-football-tournament-45134"
+    },
+    {
+        "event_name": "Trip to Geiranger",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "23/04/2026 - 26/04/2026",
+            "start": "2026-04-23",
+            "end": "2026-04-26"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Geiranger, NO",
+        "event_page_link": "https://activities.esn.org/activity/trip-geiranger-42855"
+    },
+    {
+        "event_name": "Erasmus Wednesdays - FRAT PARTY🍻🔥",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "22/04/2026",
+            "start": "2026-04-22",
+            "end": "2026-04-22"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/erasmus-wednesdays-frat-party-45336"
+    },
+    {
+        "event_name": "Pizza-making class",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "20/04/2026",
+            "start": "2026-04-20",
+            "end": "2026-04-20"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Trondheim, NO",
+        "event_page_link": "https://activities.esn.org/activity/pizza-making-class-45397"
+    },
+    {
+        "event_name": "Cypriot Dance Picnic",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "19/04/2026",
+            "start": "2026-04-19",
+            "end": "2026-04-19"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/cypriot-dance-picnic-44720"
+    },
+    {
+        "event_name": "Beer Pong Tournament Vol.3",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "16/04/2026",
+            "start": "2026-04-16",
+            "end": "2026-04-16"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/beer-pong-tournament-vol3-45315"
+    },
+    {
+        "event_name": "Erasmus Wednesdays - DO YOU DARE? ✉️😈",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "15/04/2026",
+            "start": "2026-04-15",
+            "end": "2026-04-15"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/erasmus-wednesdays-do-you-dare-45335"
+    },
+    {
+        "event_name": "Nidar Chocolate Tour",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "13/04/2026 - 27/04/2026",
+            "start": "2026-04-13",
+            "end": "2026-04-27"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Trondheim, NO",
+        "event_page_link": "https://activities.esn.org/activity/nidar-chocolate-tour-45401"
+    },
+    {
+        "event_name": "Drink & Draw",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "12/04/2026",
+            "start": "2026-04-12",
+            "end": "2026-04-12"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Trondheim, NO",
+        "event_page_link": "https://activities.esn.org/activity/drink-draw-45438"
+    },
+    {
+        "event_name": "Bingo nigth",
+        "organizer_section": "ESN Palermo",
+        "event_date": {
+            "raw": "09/04/2026",
+            "start": "2026-04-09",
+            "end": "2026-04-09"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-palermo",
+        "location": "Palermo, IT",
+        "event_page_link": "https://activities.esn.org/activity/bingo-nigth-45332"
+    },
+    {
+        "event_name": "Iceland",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "09/04/2026 - 14/04/2026",
+            "start": "2026-04-09",
+            "end": "2026-04-14"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Reykjavik, IS",
+        "event_page_link": "https://activities.esn.org/activity/iceland-42518"
+    },
+    {
+        "event_name": "Erasmus Wednesdays - BAD BUNNIES🐰🔥",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "08/04/2026",
+            "start": "2026-04-08",
+            "end": "2026-04-08"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/erasmus-wednesdays-bad-bunnies-45334"
+    },
+    {
+        "event_name": "Arts and Crafts Picnic (April)",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "05/04/2026",
+            "start": "2026-04-05",
+            "end": "2026-04-05"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/arts-and-crafts-picnic-april-45318"
+    },
+    {
+        "event_name": "Sing it out loud! (Karaoke night)",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "03/04/2026",
+            "start": "2026-04-03",
+            "end": "2026-04-03"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/sing-it-out-loud-karaoke-night-45313"
+    },
+    {
+        "event_name": "Erasmus Wednesdays - FOOL ME ONCE",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "01/04/2026",
+            "start": "2026-04-01",
+            "end": "2026-04-01"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/erasmus-wednesdays-fool-me-once-45333"
+    },
+    {
+        "event_name": "Know Your Erasmus",
+        "organizer_section": "ESN MU",
+        "event_date": {
+            "raw": "31/03/2026",
+            "start": "2026-03-31",
+            "end": "2026-03-31"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-mu",
+        "location": "İstanbul, TR",
+        "event_page_link": "https://activities.esn.org/activity/know-your-erasmus-45396"
+    },
+    {
+        "event_name": "Ice Skating",
+        "organizer_section": "ESN MU",
+        "event_date": {
+            "raw": "30/03/2026",
+            "start": "2026-03-30",
+            "end": "2026-03-30"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-mu",
+        "location": "İstanbul, TR",
+        "event_page_link": "https://activities.esn.org/activity/ice-skating-45395"
+    },
+    {
+        "event_name": "Swimfinity",
+        "organizer_section": "ESN Pécs",
+        "event_date": {
+            "raw": "29/03/2026",
+            "start": "2026-03-29",
+            "end": "2026-03-29"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-pecs",
+        "location": "Pécs, HU",
+        "event_page_link": "https://activities.esn.org/activity/swimfinity-45288"
+    },
+    {
+        "event_name": "international dinner",
+        "organizer_section": "ESN Palermo",
+        "event_date": {
+            "raw": "29/03/2026",
+            "start": "2026-03-29",
+            "end": "2026-03-29"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-palermo",
+        "location": "Palermo, IT",
+        "event_page_link": "https://activities.esn.org/activity/international-dinner-45314"
+    },
+    {
+        "event_name": "Ice skating",
+        "organizer_section": "ESN KTU",
+        "event_date": {
+            "raw": "29/03/2026",
+            "start": "2026-03-29",
+            "end": "2026-03-29"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-ktu",
+        "location": "Kaunas, LT",
+        "event_page_link": "https://activities.esn.org/activity/ice-skating-44958"
+    },
+    {
+        "event_name": "Getaway to Bled & Ljubljana",
+        "organizer_section": "ESN Zagreb",
+        "event_date": {
+            "raw": "28/03/2026",
+            "start": "2026-03-28",
+            "end": "2026-03-28"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-zagreb",
+        "location": "Ljubljana, SI",
+        "event_page_link": "https://activities.esn.org/activity/getaway-bled-ljubljana-45038"
+    },
+    {
+        "event_name": "Conic Hill Hike",
+        "organizer_section": "ESN UofG",
+        "event_date": {
+            "raw": "28/03/2026",
+            "start": "2026-03-28",
+            "end": "2026-03-28"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-uofg",
+        "location": "Glasgow, GB",
+        "event_page_link": "https://activities.esn.org/activity/conic-hill-hike-44970"
+    },
+    {
+        "event_name": "Techno Party - City Plaza",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "28/03/2026",
+            "start": "2026-03-28",
+            "end": "2026-03-28"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/techno-party-city-plaza-44325"
+    },
+    {
+        "event_name": "Billiard Tournament",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "27/03/2026",
+            "start": "2026-03-27",
+            "end": "2026-03-27"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/billiard-tournament-45149"
+    },
+    {
+        "event_name": "ESN Silent Disco",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "27/03/2026",
+            "start": "2026-03-27",
+            "end": "2026-03-27"
+        },
+        "is_upcoming": true,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Trondheim, NO",
+        "event_page_link": "https://activities.esn.org/activity/esn-silent-disco-44952"
+    },
+    {
+        "event_name": "What is ESN?",
+        "organizer_section": "ESN MU",
+        "event_date": {
+            "raw": "26/03/2026",
+            "start": "2026-03-26",
+            "end": "2026-03-26"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-mu",
+        "location": "İstanbul, TR",
+        "event_page_link": "https://activities.esn.org/activity/what-esn-45393"
+    },
+    {
+        "event_name": "Cinema night (Cat city 1986)",
+        "organizer_section": "ESN ELTE",
+        "event_date": {
+            "raw": "26/03/2026",
+            "start": "2026-03-26",
+            "end": "2026-03-26"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-elte",
+        "location": "Budapest, HU",
+        "event_page_link": "https://activities.esn.org/activity/cinema-night-cat-city-1986-44481"
+    },
+    {
+        "event_name": "International Quiz",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "26/03/2026",
+            "start": "2026-03-26",
+            "end": "2026-03-26"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Trondheim, NO",
+        "event_page_link": "https://activities.esn.org/activity/international-quiz-44983"
+    },
+    {
+        "event_name": "Hannah Montana anniversary movie",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "26/03/2026",
+            "start": "2026-03-26",
+            "end": "2026-03-26"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/hannah-montana-anniversary-movie-45150"
+    },
+    {
+        "event_name": "Bowling Night",
+        "organizer_section": "ESN Pécs",
+        "event_date": {
+            "raw": "25/03/2026",
+            "start": "2026-03-25",
+            "end": "2026-03-25"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-pecs",
+        "location": "Pécs, HU",
+        "event_page_link": "https://activities.esn.org/activity/bowling-night-45287"
+    },
+    {
+        "event_name": "Karaoke Open Mic Night",
+        "organizer_section": "ESN UofG",
+        "event_date": {
+            "raw": "25/03/2026",
+            "start": "2026-03-25",
+            "end": "2026-03-25"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-uofg",
+        "location": "Glasgow, GB",
+        "event_page_link": "https://activities.esn.org/activity/karaoke-open-mic-night-44967"
+    },
+    {
+        "event_name": "Games Night",
+        "organizer_section": "ESN Malta",
+        "event_date": {
+            "raw": "25/03/2026",
+            "start": "2026-03-25",
+            "end": "2026-03-25"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-malta-0",
+        "location": "L-imsida, MT",
+        "event_page_link": "https://activities.esn.org/activity/games-night-45429"
+    },
+    {
+        "event_name": "Thrift Crawl",
+        "organizer_section": "ESN Zagreb",
+        "event_date": {
+            "raw": "25/03/2026",
+            "start": "2026-03-25",
+            "end": "2026-03-25"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-zagreb",
+        "location": "Zagreb, HR",
+        "event_page_link": "https://activities.esn.org/activity/thrift-crawl-45037"
+    },
+    {
+        "event_name": "Erasmus Wednesdays - OLYMPIAN GODS",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "25/03/2026",
+            "start": "2026-03-25",
+            "end": "2026-03-25"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/erasmus-wednesdays-olympian-gods-45147"
+    },
+    {
+        "event_name": "Musical Night",
+        "organizer_section": "ESN Plovdiv",
+        "event_date": {
+            "raw": "25/03/2026",
+            "start": "2026-03-25",
+            "end": "2026-03-25"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-plovdiv",
+        "location": "Plovdiv, BG",
+        "event_page_link": "https://activities.esn.org/activity/musical-night-45436"
+    },
+    {
+        "event_name": "Panel Discussion",
+        "organizer_section": "ESN Leiden",
+        "event_date": {
+            "raw": "24/03/2026",
+            "start": "2026-03-24",
+            "end": "2026-03-24"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-leiden-0",
+        "location": "Leiden, NL",
+        "event_page_link": "https://activities.esn.org/activity/panel-discussion-45294"
+    },
+    {
+        "event_name": "Language café",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "24/03/2026",
+            "start": "2026-03-24",
+            "end": "2026-03-24"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Moholt, NO",
+        "event_page_link": "https://activities.esn.org/activity/language-cafe-44302"
+    },
+    {
+        "event_name": "Bag painting",
+        "organizer_section": "ESN Trnava",
+        "event_date": {
+            "raw": "23/03/2026",
+            "start": "2026-03-23",
+            "end": "2026-03-23"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trnava",
+        "location": "Trnava, SK",
+        "event_page_link": "https://activities.esn.org/activity/bag-painting-45330"
+    },
+    {
+        "event_name": "Italian Class",
+        "organizer_section": "ESN Palermo",
+        "event_date": {
+            "raw": "23/03/2026",
+            "start": "2026-03-23",
+            "end": "2026-03-23"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-palermo",
+        "location": "Palermo, IT",
+        "event_page_link": "https://activities.esn.org/activity/italian-class-45273"
+    },
+    {
+        "event_name": "Holly Week Brotherhoods Tour",
+        "organizer_section": "ESN Valladolid",
+        "event_date": {
+            "raw": "23/03/2026",
+            "start": "2026-03-23",
+            "end": "2026-03-23"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-valladolid",
+        "location": "Valladolid, ES",
+        "event_page_link": "https://activities.esn.org/activity/holly-week-brotherhoods-tour-45441"
+    },
+    {
+        "event_name": "International Dinner",
+        "organizer_section": "ESN Nicosia",
+        "event_date": {
+            "raw": "23/03/2026",
+            "start": "2026-03-23",
+            "end": "2026-03-23"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-nicosia",
+        "location": "Nicosia, CY",
+        "event_page_link": "https://activities.esn.org/activity/international-dinner-45148"
+    },
+    {
+        "event_name": "movie nigth",
+        "organizer_section": "ESN Palermo",
+        "event_date": {
+            "raw": "22/03/2026",
+            "start": "2026-03-22",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-palermo",
+        "location": "Palermo, IT",
+        "event_page_link": "https://activities.esn.org/activity/movie-nigth-45312"
+    },
+    {
+        "event_name": "Dive Day",
+        "organizer_section": "ESN Malta",
+        "event_date": {
+            "raw": "22/03/2026",
+            "start": "2026-03-22",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-malta-0",
+        "location": "St Paul's Bay, MT",
+        "event_page_link": "https://activities.esn.org/activity/dive-day-45408"
+    },
+    {
+        "event_name": "Spring Cleaning Action (Trash Picking)",
+        "organizer_section": "ESN Halle (Saale)",
+        "event_date": {
+            "raw": "22/03/2026",
+            "start": "2026-03-22",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-halle-saale",
+        "location": "Halle (saale), DE",
+        "event_page_link": "https://activities.esn.org/activity/spring-cleaning-action-trash-picking-45383"
+    },
+    {
+        "event_name": "Birgu Tour",
+        "organizer_section": "ESN Malta",
+        "event_date": {
+            "raw": "22/03/2026",
+            "start": "2026-03-22",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-malta-0",
+        "location": "Birgu, MT",
+        "event_page_link": "https://activities.esn.org/activity/birgu-tour-45409"
+    },
+    {
+        "event_name": "ESN LSMU Vilnius Museum SpeedRun",
+        "organizer_section": "ESN LSMU",
+        "event_date": {
+            "raw": "22/03/2026",
+            "start": "2026-03-22",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-lsmu",
+        "location": "Kaunas, LT",
+        "event_page_link": "https://activities.esn.org/activity/esn-lsmu-vilnius-museum-speedrun-44420"
+    },
+    {
+        "event_name": "Board Games Afternoon",
+        "organizer_section": "ESN Lisboa",
+        "event_date": {
+            "raw": "22/03/2026",
+            "start": "2026-03-22",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-lisboa",
+        "location": "Lisboa, PT",
+        "event_page_link": "https://activities.esn.org/activity/board-games-afternoon-45232"
+    },
+    {
+        "event_name": "Pub Choir at Lager 11",
+        "organizer_section": "ESN Trondheim",
+        "event_date": {
+            "raw": "21/03/2026",
+            "start": "2026-03-21",
+            "end": "2026-03-21"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-trondheim",
+        "location": "Trondheim, NO",
+        "event_page_link": "https://activities.esn.org/activity/pub-choir-lager-11-44071"
+    },
+    {
+        "event_name": "Angels and Demons Party",
+        "organizer_section": "ESN Santander",
+        "event_date": {
+            "raw": "21/03/2026 - 22/03/2026",
+            "start": "2026-03-21",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-santander",
+        "location": "Santander, ES",
+        "event_page_link": "https://activities.esn.org/activity/angels-and-demons-party-45433"
+    },
+    {
+        "event_name": "Budapest trip",
+        "organizer_section": "ESN Pécs",
+        "event_date": {
+            "raw": "21/03/2026 - 22/03/2026",
+            "start": "2026-03-21",
+            "end": "2026-03-22"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-pecs",
+        "location": "Budapest, HU",
+        "event_page_link": "https://activities.esn.org/activity/budapest-trip-45286"
+    },
+    {
+        "event_name": "Painting Mugs",
+        "organizer_section": "ESN UCM Madrid",
+        "event_date": {
+            "raw": "21/03/2026",
+            "start": "2026-03-21",
+            "end": "2026-03-21"
+        },
+        "is_upcoming": false,
+        "organizer_section_website_link": "https://activities.esn.org/organisation/esn-ucm-madrid",
+        "location": "Madrid, ES",
+        "event_page_link": "https://activities.esn.org/activity/painting-mugs-45414"
+    }
+]
