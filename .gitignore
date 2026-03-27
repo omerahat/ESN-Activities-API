@@ -5,9 +5,28 @@ build/
 dist/
 wheels/
 *.egg-info
+*.egg
 
 # Virtual environments
-.venv
+.venv/
+venv/
+env/
 
 # Environment variables
 .env
+
+# Local / scraped data (large JSON exports)
+
+# Tooling & test caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Logs & OS
+*.log
+.DS_Store
+
+.cursor/
+.cursor
