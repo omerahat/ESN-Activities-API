@@ -1,0 +1,73 @@
+name: Smart ESN Scraper
+
+on:
+  # Manual trigger (allows you to run it directly from the GitHub Actions tab)
+  workflow_dispatch:
+    inputs:
+      job_type:
+        description: 'Which scraping job would you like to run?'
+        required: true
+        default: 'daily'
+        type: choice
+        options:
+          - daily
+          - weekly
+          - bi-weekly
+          - bi-monthly
+
+  # Automated Timers (Cron Jobs)
+  schedule:
+    - cron: '0 2 * * *'       # Daily: Every day at 02:00 UTC
+    - cron: '0 3 * * 0'       # Weekly: Every Sunday at 03:00 UTC
+    - cron: '0 4 1,15 * *'    # Bi-weekly: 1st and 15th of every month at 04:00 UTC
+    - cron: '0 5 1 */2 *'     # Bi-monthly: Every 2 months (1st of even months) at 05:00 UTC
+
+jobs:
+  scrape-and-upsert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync
+
+      # 1. DAILY: Scrapes only the first 30 pages of events (0-29)
+      - name: 📅 Run Daily Scraper (First 30 Pages)
+        if: github.event.schedule == '0 2 * * *' || github.event.inputs.job_type == 'daily'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: uv run manage.py scrape --target events --start-page 0 --end-page 29
+
+      # 2. WEEKLY: Scrapes Countries + Sections + First 100 pages of events (0-99)
+      - name: 📆 Run Weekly Scraper (Countries, Sections + First 100 Pages)
+        if: github.event.schedule == '0 3 * * 0' || github.event.inputs.job_type == 'weekly'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: uv run manage.py scrape --target all --start-page 0 --end-page 99
+
+      # 3. BI-WEEKLY: Scrapes only the first 500 pages of events (0-499)
+      - name: 🗓️ Run Bi-Weekly Scraper (First 500 Pages)
+        if: github.event.schedule == '0 4 1,15 * *' || github.event.inputs.job_type == 'bi-weekly'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: uv run manage.py scrape --target events --start-page 0 --end-page 499
+
+      # 4. BI-MONTHLY: Unlimited, scrapes all event pages until the end
+      - name: 🚀 Run Bi-Monthly Scraper (All Pages)
+        if: github.event.schedule == '0 5 1 */2 *' || github.event.inputs.job_type == 'bi-monthly'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: uv run manage.py scrape --target events
