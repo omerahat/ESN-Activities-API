@@ -76,7 +76,8 @@ create table public.esn_events (
     event_name                      text         not null,
     organizer_section               text,
     event_date                      jsonb        not null,
-    event_start_date                date generated always as (((event_date->>'start')::date)) stored,
+    -- Denormalized from event_date->>'start' via trigger (generated expr would require immutable cast).
+    event_start_date                date,
     is_upcoming                     boolean      not null default true,
     organizer_section_website_link  text,
     location                        text,
@@ -105,12 +106,29 @@ comment on column public.esn_events.details is
 create index if not exists esn_events_organizer_section_idx
     on public.esn_events (organizer_section);
 
--- Index on event start date (generated column) for date-range queries
+-- Index on event start date for date-range queries
 create index if not exists esn_events_event_start_date_idx
     on public.esn_events (event_start_date);
 
 -- ---------------------------------------------------------------------------
--- 4. updated_at trigger helper (optional but recommended for cron hygiene)
+-- 4. event_start_date from event_date JSON (replaces non-immutable generated column)
+-- ---------------------------------------------------------------------------
+create or replace function public.set_event_start_date()
+returns trigger
+language plpgsql
+as $$
+begin
+    new.event_start_date := nullif(trim(new.event_date->>'start'), '')::date;
+    return new;
+end;
+$$;
+
+create or replace trigger esn_events_set_event_start_date
+    before insert or update of event_date on public.esn_events
+    for each row execute function public.set_event_start_date();
+
+-- ---------------------------------------------------------------------------
+-- 5. updated_at trigger helper (optional but recommended for cron hygiene)
 --    Creates a shared function that sets updated_at = now() on every UPDATE.
 -- ---------------------------------------------------------------------------
 create or replace function public.set_updated_at()
