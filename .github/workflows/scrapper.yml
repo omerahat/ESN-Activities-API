@@ -1,4 +1,4 @@
-name: Smart ESN Scraper
+name: ESN Scraper
 
 on:
   # Manual trigger (allows you to run it directly from the GitHub Actions tab)
