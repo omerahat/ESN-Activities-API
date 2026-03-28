@@ -200,6 +200,24 @@ async def _fetch_html_async_with_retries(
         return None
 
 
+async def fetch_html_async(
+    client: httpx.AsyncClient,
+    url: str,
+    semaphore: asyncio.Semaphore,
+    *,
+    max_retries: int = 3,
+    backoff_base: float = 1.0,
+    jitter_ms: float = 100.0,
+) -> Optional[str]:
+    """
+    Public async HTML fetch with bounded concurrency, retries, and backoff on 429/502/503.
+    Delegates to the same implementation used by multi-page async scraping.
+    """
+    return await _fetch_html_async_with_retries(
+        client, url, semaphore, max_retries, backoff_base, jitter_ms
+    )
+
+
 async def _scrape_single_page_async(
     client: httpx.AsyncClient,
     page: int,
