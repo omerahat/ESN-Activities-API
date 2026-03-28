@@ -1,298 +1,205 @@
 # ESN Activities API
 
-Backend tooling and a small read API for aggregating public activity listings from [ESN’s activities site](https://activities.esn.org): scrape paginated HTML, optionally enrich each activity from its detail page, upsert rows into Supabase, and serve paginated JSON over FastAPI.
+Welcome to the **ESN Activities API**! This project provides a robust, fully automated, and modular scraping pipeline paired with a modern backend to extract, store, and serve data related to the Erasmus Student Network (ESN) Activities.
+
+## 🚀 Project Overview & Tech Stack
+
+The platform programmatically harvests ESN's global structure—countries, local sections, and upcoming/past activities—and serves it via a lightning-fast REST API.
+
+**Tech Stack:**
+- **Language:** Python 3 (Typing, Async/Await)
+- **Dependency Management:** [uv](https://github.com/astral-sh/uv) (Extremely fast Python package installer and resolver)
+- **Web Framework:** [FastAPI](https://fastapi.tiangolo.com)
+- **Database:** PostgreSQL via [Supabase](https://supabase.com)
+- **Web Scraping:** `httpx` and `BeautifulSoup4` (Asynchronous HTTP & HTML Parsing)
+- **CI/CD & Automation:** GitHub Actions (for cron jobs)
 
 ---
 
-## Architecture
+## 🏗 Architecture Overview
 
-| Layer | Role |
-|--------|------|
-| **List scraper** | [`menu_scraper_main.py`](menu_scraper_main.py) + [`src/menu_scraper_funcs.py`](src/menu_scraper_funcs.py) request `https://activities.esn.org/activities?page=N`, parse `article.activities-mini-preview` cards, and write a JSON **array** (default [`events.json`](events.json)). |
-| **Detail enricher (optional)** | [`enrich_events_with_details.py`](enrich_events_with_details.py) + [`src/detail_scraper_funcs.py`](src/detail_scraper_funcs.py) fetch each `event_page_link`, parse detail HTML into `event["details"]`, and atomically replace the JSON file. |
-| **Upload** | [`upload_events_to_supabase.py`](upload_events_to_supabase.py) maps list-level fields to table rows and **upserts** on `event_page_link`. |
-| **API** | [`main.py`](main.py): FastAPI application backed by Supabase; exposes `GET /api/v1/activities` with pagination. |
+The system runs on two primary engines: an **Asynchronous Scraping Pipeline** (CLI Orchestrated) and a **FastAPI backend**. The scrapers fetch unstructured data, clean it utilizing an OOP-based blueprint, and confidently `UPSERT` it to Supabase. FastAPI then reliably serves this living data.
 
 ```mermaid
-flowchart LR
-  scrape[menu_scraper_main]
-  json[events.json]
-  enrich[enrich_events_with_details]
-  upload[upload_events_to_supabase]
-  db[(Supabase esn_events)]
-  api[main.py FastAPI]
-  scrape --> json
-  json --> enrich
-  json --> upload
-  enrich --> json
-  upload --> db
-  api --> db
+flowchart TD
+    Trigger["Cron Job / CLI"] --> Orchestrator["manage.py Orchestrator"]
+    
+    subgraph Scrapers["Scraping Pipeline (OOP)"]
+        Base["BaseScraper (Abstract)"]
+        Countries["CountryScraper"]
+        Sections["SectionScraper"]
+        Events["EventScraper"]
+        
+        Base <|-- Countries
+        Base <|-- Sections
+        Base <|-- Events
+    end
+    
+    Orchestrator --> Scrapers
+    Scrapers -- "UPSERT via API" --> DB[("Supabase (PostgreSQL)")]
+    
+    DB --> FastAPI["FastAPI Backend"]
+    
+    FastAPI -- "JSON Responses" --> Endpoints["API Endpoints (/countries, /sections, /events)"]
 ```
 
 ---
 
-## Requirements
+## 🗄 Database Schema
 
-- **Python** `>= 3.9` (see [`pyproject.toml`](pyproject.toml)). The repo includes [`.python-version`](.python-version) pinning **3.9** for local development.
-- **uv** (recommended): this project ships [`uv.lock`](uv.lock). Install dependencies with:
+The foundation of the API is a strictly typed relational schema stored in Supabase holding three main tables:
 
-  ```bash
-  uv sync
-  ```
+```mermaid
+erDiagram
+    esn_countries {
+        varchar(2) country_code PK
+        text country_name
+        text url
+        text email
+        text website
+        jsonb social_links
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz last_scraped_at
+    }
 
-  Alternatively, using pip:
+    esn_sections {
+        uuid id PK
+        text section_name UK
+        varchar(2) country_code FK
+        text city
+        text logo_url
+        text address
+        text university_name
+        text university_website
+        text email
+        text website
+        jsonb social_links
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz last_scraped_at
+    }
 
-  ```bash
-  python -m venv .venv
-  source .venv/bin/activate   # Windows: .venv\Scripts\activate
-  pip install -e .
-  ```
+    esn_events {
+        uuid id PK
+        text event_name
+        text organizer_section FK
+        jsonb event_date
+        boolean is_upcoming
+        text organizer_section_website_link
+        text location
+        text event_page_link UK
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz last_scraped_at
+    }
 
-### Dependencies
-
-Runtime libraries are declared in [`pyproject.toml`](pyproject.toml), including FastAPI, httpx, python-dotenv, Supabase Python client, uvicorn, **beautifulsoup4**, and **requests** (HTML parsing and HTTP for the scrapers). After `uv sync`, all entry points—including scrapers—should import cleanly.
-
----
-
-## Environment variables
-
-Create a `.env` file in the project root (do not commit it; `.env` is listed in [`.gitignore`](.gitignore)).
-
-| Variable | Used by | Description |
-|----------|---------|-------------|
-| `SUPABASE_URL` | API ([`main.py`](main.py)), upload | Supabase project URL. |
-| `SUPABASE_KEY` | API | Secret key. The API reads **only** this name; use an anon key with RLS policies that allow `SELECT` on `esn_events`, or a service role if your setup expects it (understand the security implications). |
-| `SUPABASE_SERVICE_ROLE_KEY` | Upload (optional) | Service role key for bulk upsert (bypasses RLS). If unset, upload falls back to `SUPABASE_KEY`. |
-| `SUPABASE_KEY` | Upload | Used when `SUPABASE_SERVICE_ROLE_KEY` is not set. |
-
-The API fails fast at import time if `SUPABASE_URL` or `SUPABASE_KEY` is missing (raises `RuntimeError` with message `SUPABASE_URL ve SUPABASE_KEY ortam değişkenleri gerekli.`). The upload script exits with a clear error if URL and key cannot be resolved.
-
----
-
-## Database
-
-Apply the migration before uploading or running the API against a new project:
-
-- File: [`supabase/migrations/20250327120000_create_esn_events.sql`](supabase/migrations/20250327120000_create_esn_events.sql)
-
-It creates:
-
-- Table `public.esn_events` with columns: `id` (UUID), `event_name`, `organizer_section`, `event_date` (JSONB), `is_upcoming`, `organizer_section_website_link`, `location`, `event_page_link`, `created_at`.
-- **Unique constraint** on `event_page_link` (upsert key).
-- Indexes on `organizer_section` and on `(event_date->>'start')` for sorting/filtering.
-
-Run the SQL in the Supabase SQL Editor, or use the Supabase CLI (`supabase db push`) if your workflow uses linked projects.
-
----
-
-## Data model
-
-### List event (menu scraper output)
-
-Each element of the JSON array has roughly this shape (see [`parse_events` in `menu_scraper_funcs.py`](src/menu_scraper_funcs.py)):
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `event_name` | string \| null | Activity title. |
-| `organizer_section` | string \| null | ESN section name from the card. |
-| `event_date` | object | `{ "raw", "start", "end" }` — `start`/`end` are ISO dates (`YYYY-MM-DD`) when parsed. |
-| `is_upcoming` | boolean \| null | `true` when start date is today or in the future (when parseable). |
-| `organizer_section_website_link` | string \| null | Absolute URL to the organisation page. |
-| `location` | string \| null | City / region line from the card. |
-| `event_page_link` | string | Absolute URL to the activity; **required** for deduplication and upload. |
-
-### Details object (after `enrich_events_with_details.py`)
-
-When present, `details` is a dictionary aligned with [`_empty_details()` / `parse_event_details()`](src/detail_scraper_funcs.py):
-
-| Field | Notes |
-|-------|--------|
-| `main_image_url` | Absolute URL or `null`. |
-| `detailed_location` | String (may be empty). |
-| `total_participants` | Integer or `null`. |
-| `causes`, `types_of_activity`, `sdgs`, `objectives` | Lists of strings. |
-| `goal_of_activity`, `description`, `outcomes` | Optional text. |
-| `registration_link` | URL or `null`. |
-
-### Upload vs. enriched JSON
-
-[`upload_events_to_supabase.py`](upload_events_to_supabase.py) maps **only** list-level fields to `esn_events` columns. The `details` subtree is **not** written to Supabase by the current script. Enriched data lives in your JSON file unless you extend the schema and upload mapper.
+    esn_countries ||--o{ esn_sections : "has"
+    esn_sections ||--o{ esn_events : "organizes"
+```
+*Note: Audit columns (`created_at`, `updated_at`, `last_scraped_at`) guarantee that we track data freshness on every scraper run.*
 
 ---
 
-## CLI reference
+## ⚙️ How It Works (The Scraping Pipeline)
 
-### 1. Menu scraper — [`menu_scraper_main.py`](menu_scraper_main.py)
+The data pipeline adopts a robust **Object-Oriented Programming (OOP)** design:
 
-Scrapes pages **inclusive** from `--start-page` through `--end-page` (default both `0`, i.e. a single page).
+1. **`BaseScraper`:** An abstract class (`src/scrapers/base_scraper.py`) that enforces all child scrapers to implement specific stages.
+2. **`fetch_data()`**: Asynchronously calls ESN endpoints, handling pagination, timeouts, and throttling.
+3. **`parse_data()`**: Cleans, parses, and normalises raw HTML/JSON structures into standard dictionaries.
+4. **`save_to_json()`**: An inherited concrete utility to optionally cache scrapped data strictly as local JSON files for debugging/archival.
+5. **`upsert_to_db()`**: Synchronises state to PostgreSQL. Supabase effectively resolves conflicts using an `UPSERT` command (e.g., matching on `event_page_link`). If it exists, it updates; if not, it creates.
 
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `--start-page` | `0` | First page index. |
-| `--end-page` | `0` | Last page index (inclusive). |
-| `-o`, `--output` | `events.json` | Output JSON path. |
-| `--no-save` | off | Print JSON to stdout only; do not write a file. |
-| `--continue-on-empty` | off | Keep scanning the range even if a page returns no events. |
-| `--async-fetch` | off | Use async httpx with bounded concurrency. |
-| `--concurrency` | `10` | Max concurrent requests (async mode). |
-| `--max-retries` | `3` | Retries for 429/502/503 and transient errors (async). |
-| `--backoff-base` | `1.0` | Base seconds for exponential backoff (async). |
-| `--jitter-ms` | `100` | Random jitter before requests and retries (async). |
-| `--timeout` | `20` | HTTP timeout in seconds (async client). |
+---
 
-Examples:
+## 🛠 Installation & Setup
 
+Get started locally in minutes using `uv`.
+
+**1. Clone the repository:**
 ```bash
-# Single page (0), save to events.json
-uv run python menu_scraper_main.py
-
-# Pages 0–5, async with higher concurrency
-uv run python menu_scraper_main.py --start-page 0 --end-page 5 --async-fetch --concurrency 15 -o events.json
+git clone https://github.com/your-username/ESN-Activities-API.git
+cd ESN-Activities-API
 ```
 
-### 2. Detail enricher — [`enrich_events_with_details.py`](enrich_events_with_details.py)
-
-Fetches each `event_page_link` and sets `event["details"]`, then replaces the JSON file atomically. **Back up large files first**, e.g. `cp events.json events.json.bak` (the script also prints a reminder).
-
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `-f`, `--file` | `events.json` | Input/output JSON path. |
-| `--limit` | `0` | If `> 0`, only process this many events from `--offset`. |
-| `--offset` | `0` | Index of first event to consider. |
-| `-c`, `--concurrency` | `40` | Max concurrent HTTP requests. |
-| `--max-retries` | `3` | Retries on rate limits / transient errors. |
-| `--backoff-base` | `1.0` | Backoff base (seconds). |
-| `--jitter-ms` | `100` | Jitter in milliseconds. |
-| `--timeout` | `20` | Per-request timeout (seconds). |
-| `--progress-every` | `100` | Progress log interval (completed fetches). |
-| `--skip-existing` | off | Skip events whose `details` already look populated (resume-friendly). |
-
-Examples:
-
+**2. Install dependencies with `uv`:**
 ```bash
-# Dry run on two events (good for testing)
-uv run python enrich_events_with_details.py --limit 2 --concurrency 10
+# If you don't have uv installed, install it first:
+# curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Resume: skip rows that already have rich details
-uv run python enrich_events_with_details.py --skip-existing --concurrency 20
+# Install project dependencies
+uv sync
 ```
 
-### 3. Upload to Supabase — [`upload_events_to_supabase.py`](upload_events_to_supabase.py)
-
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `-f`, `--file` | `events.json` | JSON array to load. |
-| `-t`, `--table` | `esn_events` | Target table name. |
-| `--batch-size` | `500` | Rows per upsert request. |
-| `--limit` | `0` | If `> 0`, only first N events (testing). |
-| `--dry-run` | off | Parse and map rows; print summary; no Supabase calls. |
-
-Example:
-
+**3. Configure Environment Variables:**
+You need a Supabase backend to connect to. Copy the example `.env` file and insert your keys.
 ```bash
-uv run python upload_events_to_supabase.py --dry-run
-uv run python upload_events_to_supabase.py -f events.json --batch-size 500
+cp .env.example .env
+```
+Inside your `.env` file, specify:
+```ini
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_KEY=your-supabase-service-role-key-or-anon-key
 ```
 
 ---
 
-## Running the API
+## 💻 CLI Commands (Management Tool)
 
-From the repository root:
+We use `manage.py` as our orchestrator to manually kick-off scraping jobs.
 
+You can safely run all scrapers in the correct Foreign Key dependency order (Countries → Sections → Events) by targeting `all`:
 ```bash
-uv run python main.py
+python manage.py scrape --target all
 ```
 
-This starts **uvicorn** with `reload` on host `0.0.0.0` and port **8000** (see [`main.py`](main.py)).
-
-Equivalent:
-
+Alternatively, you can target individual scrapers:
 ```bash
-uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+python manage.py scrape --target countries
+python manage.py scrape --target sections
+python manage.py scrape --target events --start-page 0 --end-page 5
 ```
 
-- **Root** [`GET /`](http://localhost:8000/): short JSON welcome message pointing to interactive docs.
-- **OpenAPI / Swagger UI**: [`GET /docs`](http://localhost:8000/docs).
+**Optional flags:** 
+- `--archive`: Backup scraped data to `/data` as `.json` dumps.
+- `--concurrency`: Change the thread limit while hitting external servers.
+- `--help`: View all available settings.
 
 ---
 
-## HTTP API
+## 🌍 API Endpoints Documentation
 
-### `GET /api/v1/activities`
-
-Returns paginated rows from `esn_events`, ordered by `event_date->>start` **descending** (newer start dates first).
-
-| Query parameter | Type | Default | Constraints |
-|-----------------|------|---------|-------------|
-| `limit` | integer | `50` | `1`–`100` |
-| `offset` | integer | `0` | `>= 0` |
-
-**Success response** (shape):
-
-```json
-{
-  "status": "success",
-  "count": 50,
-  "data": [ /* array of row objects from Supabase */ ]
-}
+After installing dependencies, run the server locally:
+```bash
+python main.py
+# The API will be available at http://localhost:8000
+# Interactive Swagger documentation will be available at http://localhost:8000/docs
 ```
 
-**Error response** (exception caught in route):
+### 1. Health check
+- `GET /api/v1/health`
+  - Returns whether backend is alive alongside the global latest sync timestamp.
 
-```json
-{
-  "status": "error",
-  "message": "<error string>"
-}
-```
+### 2. Countries
+- `GET /api/v1/countries`
+  - Retrieve a complete list of national ESN organisations.
 
-### CORS
+- `GET /api/v1/countries/{country_code}/sections`
+  - Retrieve all active local sections residing in an ISO-3166-1 alpha-2 country code (e.g., `/api/v1/countries/tr/sections`).
 
-[`main.py`](main.py) enables `CORSMiddleware` with `allow_origins=["*"]` and `allow_credentials=False` (wildcard origins are not compatible with credentialed requests in browsers).
+### 3. Sections
+- `GET /api/v1/sections`
+  - Retrieve flat local section structures.
+  - **Query Parameters:**
+    - `city` (string): Filter by city name (case-insensitive search).
+    - `limit` (integer, default: 50): Number of records returned.
 
----
-
-## Operational notes
-
-- **`events.json` can be very large** (hundreds of thousands of lines). Full-file load/enrich/upload uses significant memory; use `--limit` on enrich and upload for tests.
-- **Scraping**: Respect the remote site’s load; tune `--concurrency`, retries, and backoff. The async paths include jitter and retries for transient HTTP errors.
-- **Secrets**: Never commit `.env` or service role keys to version control.
-
----
-
-## Project layout
-
-```
-.
-├── main.py                      # FastAPI app
-├── menu_scraper_main.py         # CLI: list scraper
-├── enrich_events_with_details.py # CLI: detail enrichment
-├── upload_events_to_supabase.py # CLI: bulk upsert
-├── events.json                  # Default scraper output (can grow very large; consider gitignoring)
-├── events3.json                 # Small sample / test payload (example)
-├── src/
-│   ├── menu_scraper_funcs.py    # Listing HTML parsing, sync/async fetch
-│   └── detail_scraper_funcs.py  # Detail page parsing
-├── supabase/migrations/         # SQL migrations
-├── pyproject.toml
-├── uv.lock
-└── README.md
-```
-
----
-
-## Troubleshooting
-
-| Symptom | What to check |
-|---------|----------------|
-| `RuntimeError` about `SUPABASE_URL` / `SUPABASE_KEY` | `.env` present and loaded; variable names exact for the API. |
-| Upload exits with missing URL/key | Set `SUPABASE_URL` and either `SUPABASE_SERVICE_ROLE_KEY` or `SUPABASE_KEY`. |
-| `ModuleNotFoundError: bs4` or `requests` | Run `uv sync` so scraper dependencies from `pyproject.toml` are installed. |
-| Empty or partial scrape | Site HTML may have changed; inspect selectors in `src/menu_scraper_funcs.py` / `detail_scraper_funcs.py`. |
-
----
-
-## License
-
-No license file is included in this repository; add a `LICENSE` file if you distribute or reuse the code publicly.
+### 4. Events
+- `GET /api/v1/events`
+  - Fetch global ongoing or past ESN events. Returns basic details + enriched JSONB data.
+  - **Query Parameters:**
+    - `is_upcoming` (boolean) - Select upcoming vs strictly past events.
+    - `organizer_section` (string) - Exact match for a responsible section.
+    - `limit` (int, default: 50, max 100) - Number of results.
+    - `skip` (int, default: 0) - Pagination offset.

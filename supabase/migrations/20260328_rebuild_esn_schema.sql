@@ -76,10 +76,12 @@ create table public.esn_events (
     event_name                      text         not null,
     organizer_section               text,
     event_date                      jsonb        not null,
+    event_start_date                date generated always as (((event_date->>'start')::date)) stored,
     is_upcoming                     boolean      not null default true,
     organizer_section_website_link  text,
     location                        text,
     event_page_link                 text         not null,
+    details                         jsonb,
 
     -- Audit columns
     created_at      timestamptz  not null default now(),
@@ -96,13 +98,16 @@ create table public.esn_events (
 comment on table public.esn_events is
     'ESN activity rows scraped from activities.esn.org; upsert key is event_page_link.';
 
+comment on column public.esn_events.details is
+    'Structured detail-page payload (description, SDGs, causes, etc.) from the activity detail scrape.';
+
 -- Index on FK (organizer_section) for efficient lookups
 create index if not exists esn_events_organizer_section_idx
     on public.esn_events (organizer_section);
 
--- Index on event start date (JSONB extraction) for date-range queries
-create index if not exists esn_events_event_date_start_idx
-    on public.esn_events ((event_date ->> 'start'));
+-- Index on event start date (generated column) for date-range queries
+create index if not exists esn_events_event_start_date_idx
+    on public.esn_events (event_start_date);
 
 -- ---------------------------------------------------------------------------
 -- 4. updated_at trigger helper (optional but recommended for cron hygiene)
