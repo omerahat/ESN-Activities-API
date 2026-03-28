@@ -30,9 +30,9 @@ flowchart TD
         Sections["SectionScraper"]
         Events["EventScraper"]
         
-        Base <|-- Countries
-        Base <|-- Sections
-        Base <|-- Events
+        Base --> Countries
+        Base --> Sections
+        Base --> Events
     end
     
     Orchestrator --> Scrapers
