@@ -272,3 +272,5 @@ curl -s "http://localhost:8000/api/v1/events?skip=20&limit=20"
 ```bash
 curl -s "http://localhost:8000/api/v1/sections?city=Berlin&limit=10"
 ```
+
+**Disclaimer:** This is an unofficial API created for educational purposes. It is not affiliated with, maintained, or endorsed by ESN (Erasmus Student Network) International. All data belongs to activities.esn.org.
