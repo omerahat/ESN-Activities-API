@@ -228,7 +228,7 @@ class SectionScraper(BaseScraper):
     """
 
     # Concurrency knobs
-    DEFAULT_CONCURRENCY: int = 3
+    DEFAULT_CONCURRENCY: int = 20
     UPSERT_BATCH_SIZE: int = 50
 
     def __init__(
@@ -245,11 +245,43 @@ class SectionScraper(BaseScraper):
     # 1. fetch_data  (async)
     # ------------------------------------------------------------------
 
+    async def _fetch_single(
+        self,
+        client: httpx.AsyncClient,
+        url: str,
+        sem: asyncio.Semaphore,
+        *,
+        total: int,
+        progress_lock: asyncio.Lock,
+        completed_holder: List[int],
+    ) -> Tuple[str, Optional[str]]:
+        html: Optional[str] = None
+        try:
+            async with sem:
+                await asyncio.sleep(random.uniform(0.1, 0.3))
+                html = await fetch_html_async(
+                    client,
+                    url,
+                    None,
+                    jitter_ms=0,
+                )
+        except Exception:
+            html = None
+
+        async with progress_lock:
+            completed_holder[0] += 1
+            c = completed_holder[0]
+            if c % 500 == 0 or c == total:
+                self._logger.info("Fetched %d/%d section pages...", c, total)
+
+        return (url, html)
+
     async def fetch_data(self) -> List[Tuple[str, Optional[str]]]:
         """Discover section page URLs, then fetch their HTML.
 
         Returns:
-            A list of ``(url, html | None)`` tuples.
+            A list of ``(url, html)`` tuples for pages whose HTML was fetched
+            successfully (failures are omitted).
         """
         semaphore = asyncio.Semaphore(self._concurrency)
 
@@ -265,23 +297,28 @@ class SectionScraper(BaseScraper):
                 self._limit,
             )
 
-            results: List[Tuple[str, Optional[str]]] = []
             total = len(urls)
+            if total == 0:
+                return []
 
-            for index, url in enumerate(urls, start=1):
-                self._logger.info(
-                    "[%d/%d] Fetching section page %s …", index, total, url
-                )
-                if index > 1:
-                    await asyncio.sleep(random.uniform(1.0, 2.5))
-                try:
-                    html = await fetch_html_async(client, url, semaphore)
-                except Exception as exc:
-                    self._logger.warning("Fetch error for %s: %s", url, exc)
-                    html = None
-                results.append((url, html))
+            progress_lock = asyncio.Lock()
+            completed_holder: List[int] = [0]
 
-        return results
+            raw = await asyncio.gather(
+                *[
+                    self._fetch_single(
+                        client,
+                        u,
+                        semaphore,
+                        total=total,
+                        progress_lock=progress_lock,
+                        completed_holder=completed_holder,
+                    )
+                    for u in urls
+                ]
+            )
+
+        return [(u, h) for u, h in raw if h is not None]
 
     # ------------------------------------------------------------------
     # 2. parse_data
@@ -293,8 +330,7 @@ class SectionScraper(BaseScraper):
     ) -> List[Dict[str, Any]]:
         """Parse each ``(url, html)`` tuple into a flat section record.
 
-        Records whose HTML could not be fetched are still included (with
-        ``None`` / empty defaults) so they are visible in logs.
+        Only successful fetches are present in *raw_data* (see ``fetch_data``).
         """
         records: List[Dict[str, Any]] = []
 

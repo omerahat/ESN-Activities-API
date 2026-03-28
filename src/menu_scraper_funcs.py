@@ -159,7 +159,7 @@ def fetch_html(url: str, session: Optional[requests.Session] = None) -> Optional
 async def _fetch_html_async_with_retries(
     client: httpx.AsyncClient,
     url: str,
-    semaphore: asyncio.Semaphore,
+    semaphore: Optional[asyncio.Semaphore],
     max_retries: int,
     backoff_base: float,
     jitter_ms: float,
@@ -167,8 +167,12 @@ async def _fetch_html_async_with_retries(
     """
     Bounded-concurrency fetch with jitter and exponential backoff on 429/502/503.
     Respects Retry-After when present.
+
+    When *semaphore* is None, the caller is responsible for concurrency (e.g. an
+    outer ``async with sem``); the HTTP retry loop runs without acquiring here.
     """
-    async with semaphore:
+
+    async def _inner() -> Optional[str]:
         pre_jitter = random.uniform(0, jitter_ms / 1000.0) if jitter_ms > 0 else 0.0
         if pre_jitter:
             await asyncio.sleep(pre_jitter)
@@ -199,11 +203,16 @@ async def _fetch_html_async_with_retries(
                 return None
         return None
 
+    if semaphore is None:
+        return await _inner()
+    async with semaphore:
+        return await _inner()
+
 
 async def fetch_html_async(
     client: httpx.AsyncClient,
     url: str,
-    semaphore: asyncio.Semaphore,
+    semaphore: Optional[asyncio.Semaphore] = None,
     *,
     max_retries: int = 3,
     backoff_base: float = 1.0,
@@ -212,6 +221,9 @@ async def fetch_html_async(
     """
     Public async HTML fetch with bounded concurrency, retries, and backoff on 429/502/503.
     Delegates to the same implementation used by multi-page async scraping.
+
+    Pass ``semaphore=None`` when the caller already holds a concurrency slot
+    (e.g. ``async with sem`` in a parallel worker).
     """
     return await _fetch_html_async_with_retries(
         client, url, semaphore, max_retries, backoff_base, jitter_ms

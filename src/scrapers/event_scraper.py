@@ -2,8 +2,9 @@ from __future__ import annotations
 
 """
 Event scraper – two-phase pipeline that scrapes the ESN activities feed
-(paginated listing) *and* dives into each event's detail page for JSONB-ready
-structured data, then upserts everything into ``esn_events``.
+(sequential pagination over ``activities.esn.org/?page=N``) *and* dives into
+each event's detail page for JSONB-ready structured data, then upserts
+everything into ``esn_events``.
 
 Merges the logic previously split across ``menu_scraper_main.py``,
 ``menu_scraper_funcs.py``, ``enrich_events_with_details.py``, and
@@ -12,8 +13,8 @@ Merges the logic previously split across ``menu_scraper_main.py``,
 
 import asyncio
 import logging
+import random
 import re
-import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -39,6 +40,12 @@ logger: logging.Logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 ACTIVITIES_BASE: str = "https://activities.esn.org"
+
+
+def _feed_listing_url(page: int) -> str:
+    """Build activities feed URL for a given zero-based page index."""
+    return f"{ACTIVITIES_BASE}/?page={page}"
+
 
 # Regex used by feed parsing
 DATE_PATTERN = re.compile(
@@ -165,8 +172,11 @@ def _parse_feed_page(html: str) -> List[Dict[str, Any]]:
 class EventScraper(BaseScraper):
     """Two-phase ESN event scraper → ``esn_events``.
 
-    Phase 1 – **Feed** : paginate through ``activities.esn.org/activities?page=N``
-        and collect basic event metadata (name, organizer, date, location, link).
+    Phase 1 – **Feed** : walk ``activities.esn.org/?page=N`` sequentially until
+        the listing is exhausted (no HTML or no events when ``stop_on_empty``).
+        When ``end_page > start_page``, discovery stops after page ``end_page``
+        (inclusive) for partial runs; when ``end_page == start_page``, pagination
+        continues until the feed ends.
     Phase 2 – **Detail** : for every ``event_page_link``, fetch the detail page
         and parse rich JSONB fields (description, causes, SDGs, participants …).
 
@@ -177,7 +187,7 @@ class EventScraper(BaseScraper):
     3. ``upsert_to_db`` – upsert into ``esn_events``; conflict on ``event_page_link``.
     """
 
-    DEFAULT_CONCURRENCY: int = 10
+    DEFAULT_CONCURRENCY: int = 20
     UPSERT_BATCH_SIZE: int = 50
 
     def __init__(
@@ -221,12 +231,21 @@ class EventScraper(BaseScraper):
         ) as client:
             # ---- Phase 1: paginated feed scraping ----
             events = await self._scrape_feed(client, semaphore)
-            self._logger.info(
-                "Phase 1 complete: %d unique events from pages %d–%d.",
-                len(events),
-                self._start_page,
-                self._end_page,
-            )
+            if self._end_page > self._start_page:
+                self._logger.info(
+                    "Phase 1 complete: %d unique events "
+                    "(feed pages %d–%d inclusive, capped).",
+                    len(events),
+                    self._start_page,
+                    self._end_page,
+                )
+            else:
+                self._logger.info(
+                    "Phase 1 complete: %d unique events from full feed discovery "
+                    "(starting at page %d).",
+                    len(events),
+                    self._start_page,
+                )
 
             # ---- Phase 2: detail page enrichment ----
             events = await self._enrich_details(client, semaphore, events)
@@ -287,10 +306,42 @@ class EventScraper(BaseScraper):
 
         ``event_date`` is stored as JSONB (dict with ``raw``, ``start``,
         ``end`` keys).
+
+        Rows whose ``organizer_section`` is missing from ``esn_sections``
+        are nullified before upsert to satisfy the FK on ``section_name``.
         """
         if not data:
             self._logger.info("No event records to upsert.")
             return
+
+        sections_resp = (
+            supabase_client.table("esn_sections")
+            .select("section_name")
+            .execute()
+        )
+        raw_sections = sections_resp.data or []
+        valid_sections: set[str] = {
+            r["section_name"]
+            for r in raw_sections
+            if isinstance(r, dict) and r.get("section_name")
+        }
+
+        orphaned_count = 0
+        for event in data:
+            org = event.get("organizer_section")
+            if isinstance(org, str):
+                org = org.strip() or None
+            if org and org not in valid_sections:
+                orphaned_count += 1
+            if not org or org not in valid_sections:
+                event["organizer_section"] = None
+
+        if orphaned_count:
+            self._logger.warning(
+                "Warning: Found %d orphaned events with unknown sections. "
+                "Nullifying their organizer fields.",
+                orphaned_count,
+            )
 
         now_iso = datetime.now(timezone.utc).isoformat()
 
@@ -351,15 +402,23 @@ class EventScraper(BaseScraper):
         client: httpx.AsyncClient,
         semaphore: asyncio.Semaphore,
     ) -> List[Dict[str, Any]]:
-        """Scrape the paginated activities listing in parallel.
+        """Scrape the activities listing page by page until the feed ends.
 
-        Pages are merged in order and deduplicated by ``event_page_link``.
+        Order follows ascending ``page`` indices; duplicates are dropped via
+        ``seen_links`` on ``event_page_link``.
         """
-        pages = list(range(self._start_page, self._end_page + 1))
+        all_events: List[Dict[str, Any]] = []
+        seen_links: set[str] = set()
+        page_number = self._start_page
+        pages_fetched = 0
+        capped_range = self._end_page > self._start_page
 
-        async def fetch_page(page: int) -> Tuple[int, List[Dict[str, Any]]]:
-            url = f"{ACTIVITIES_BASE}/activities?page={page}"
-            self._logger.debug("Fetching feed page %d …", page)
+        while True:
+            if capped_range and page_number > self._end_page:
+                break
+
+            url = _feed_listing_url(page_number)
+            self._logger.debug("Fetching feed page %d …", page_number)
             html = await fetch_html_async(
                 client,
                 url,
@@ -369,24 +428,21 @@ class EventScraper(BaseScraper):
                 jitter_ms=self._jitter_ms,
             )
             if not html:
-                return (page, [])
+                self._logger.info(
+                    "Feed page %d: no HTML (empty response or non-200); stopping.",
+                    page_number,
+                )
+                break
+
             page_events = await asyncio.to_thread(_parse_feed_page, html)
-            return (page, page_events)
 
-        results = await asyncio.gather(*[fetch_page(p) for p in pages])
-        results_sorted = sorted(results, key=lambda r: r[0])
-
-        all_events: List[Dict[str, Any]] = []
-        seen_links: set[str] = set()
-
-        for page, page_events in results_sorted:
             if self._stop_on_empty and not page_events:
                 self._logger.info(
                     "Page %d returned 0 events; stopping (stop_on_empty).",
-                    page,
+                    page_number,
                 )
                 break
-            self._logger.info("Page %d: %d events.", page, len(page_events))
+
             for event in page_events:
                 link = event.get("event_page_link")
                 if link and link in seen_links:
@@ -395,11 +451,60 @@ class EventScraper(BaseScraper):
                     seen_links.add(link)
                 all_events.append(event)
 
+            pages_fetched += 1
+            self._logger.info(
+                "Discovered %d urls across %d pages so far…",
+                len(seen_links),
+                pages_fetched,
+            )
+            self._logger.info(
+                "Page %d: %d events on this page.",
+                page_number,
+                len(page_events),
+            )
+
+            page_number += 1
+
         return all_events
 
     # ------------------------------------------------------------------
     # Internal: Phase-2 detail enrichment
     # ------------------------------------------------------------------
+
+    async def _fetch_single_detail(
+        self,
+        client: httpx.AsyncClient,
+        semaphore: asyncio.Semaphore,
+        index: int,
+        url: str,
+        *,
+        total: int,
+        progress_lock: asyncio.Lock,
+        completed_holder: List[int],
+    ) -> Tuple[int, str, Optional[str]]:
+        """Fetch one detail page under the shared semaphore; return HTML or None."""
+        html: Optional[str] = None
+        try:
+            async with semaphore:
+                await asyncio.sleep(random.uniform(0.1, 0.3))
+                html = await fetch_html_async(
+                    client,
+                    url,
+                    None,
+                    max_retries=self._max_retries,
+                    backoff_base=self._backoff_base,
+                    jitter_ms=0,
+                )
+        except Exception:
+            html = None
+
+        async with progress_lock:
+            completed_holder[0] += 1
+            c = completed_holder[0]
+            if c % 500 == 0 or c == total:
+                self._logger.info("Fetched %d/%d events...", c, total)
+
+        return (index, url, html)
 
     async def _enrich_details(
         self,
@@ -422,57 +527,34 @@ class EventScraper(BaseScraper):
             return events
 
         total = len(work)
-        completed = 0
-        start_t = time.monotonic()
         progress_lock = asyncio.Lock()
-
-        async def fetch_one(
-            index: int, url: str
-        ) -> Tuple[int, Dict[str, Any]]:
-            nonlocal completed
-            try:
-                html = await fetch_html_async(
-                    client,
-                    url,
-                    semaphore,
-                    max_retries=self._max_retries,
-                    backoff_base=self._backoff_base,
-                    jitter_ms=self._jitter_ms,
-                )
-                details = parse_event_details(html or "")
-            except Exception as exc:
-                self._logger.warning(
-                    "Detail fetch error for %s: %s", url, exc
-                )
-                details = parse_event_details("")
-
-            async with progress_lock:
-                completed += 1
-                if completed % 100 == 0 or completed == total:
-                    elapsed = time.monotonic() - start_t
-                    pct = 100.0 * completed / total
-                    eta = (
-                        (elapsed / completed) * (total - completed)
-                        if completed
-                        else 0.0
-                    )
-                    self._logger.info(
-                        "Detail enrichment: %d/%d (%.1f%%) "
-                        "elapsed %.1fs ETA %.1fs",
-                        completed,
-                        total,
-                        pct,
-                        elapsed,
-                        eta,
-                    )
-
-            return (index, details)
+        completed_holder: List[int] = [0]
 
         results = await asyncio.gather(
-            *[fetch_one(i, u) for i, u in work]
+            *[
+                self._fetch_single_detail(
+                    client,
+                    semaphore,
+                    i,
+                    u,
+                    total=total,
+                    progress_lock=progress_lock,
+                    completed_holder=completed_holder,
+                )
+                for i, u in work
+            ]
         )
 
-        for idx, details in results:
-            events[idx]["details"] = details
+        failed = sum(1 for _i, _u, h in results if h is None)
+        if failed:
+            self._logger.info(
+                "Detail fetch returned no HTML for %d/%d URLs "
+                "(empty details).",
+                failed,
+                total,
+            )
+
+        for idx, _url, html in results:
+            events[idx]["details"] = parse_event_details(html or "")
 
         return events

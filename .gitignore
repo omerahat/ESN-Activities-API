@@ -30,3 +30,5 @@ htmlcov/
 
 .cursor/
 .cursor
+
+data/
