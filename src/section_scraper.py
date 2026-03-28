@@ -4,11 +4,19 @@ Discover ESN section URLs from accounts.esn.org and scrape contact/location deta
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Repo root on sys.path so `python src/section_scraper.py` works, not only `python -m src.section_scraper`.
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+import argparse
 import asyncio
 import json
 import random
 import re
-from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin, urlparse
 
@@ -23,8 +31,8 @@ from src.menu_scraper_funcs import (
 
 ACCOUNTS_BASE = "https://accounts.esn.org/"
 ACCOUNTS_LIST_URL = urljoin(ACCOUNTS_BASE, "")
-# Repo root: .../ESN_ACTIVITIES_API/sections.json
-DEFAULT_SECTIONS_JSON = Path(__file__).resolve().parent.parent / "sections.json"
+ESN_COUNTRIES_JSON = REPO_ROOT / "esn_countries.json"
+ESN_SECTIONS_JSON = REPO_ROOT / "esn_sections.json"
 
 
 def clean_text(text: Optional[str]) -> str:
@@ -54,6 +62,46 @@ def country_code_from_url(page_url: str) -> Optional[str]:
         return token.upper() if token else None
     except (ValueError, IndexError):
         return None
+
+
+def country_code_from_country_url(page_url: str) -> Optional[str]:
+    try:
+        path = urlparse(page_url).path.strip("/")
+        parts = [p for p in path.split("/") if p]
+        if len(parts) >= 2 and parts[0].lower() == "country":
+            return parts[1].upper()
+        return None
+    except (ValueError, IndexError):
+        return None
+
+
+async def get_all_country_urls(
+    client: httpx.AsyncClient,
+    semaphore: asyncio.Semaphore,
+) -> List[str]:
+    try:
+        html = await fetch_html_async(client, ACCOUNTS_LIST_URL, semaphore)
+        if not html:
+            return []
+        soup = BeautifulSoup(html, "html.parser")
+        seen: set[str] = set()
+        urls: List[str] = []
+        for a in soup.find_all("a", href=True):
+            abs_url = accounts_absolute(a.get("href"))
+            if not abs_url:
+                continue
+            path = urlparse(abs_url).path.rstrip("/")
+            if not re.match(r"^/country/[^/]+$", path):
+                continue
+            normalized = urljoin(ACCOUNTS_BASE, path.lstrip("/"))
+            if normalized in seen:
+                continue
+            seen.add(normalized)
+            urls.append(normalized)
+        return sorted(urls)
+    except Exception as exc:
+        print(f"Country discovery error: {exc}")
+        return []
 
 
 async def get_all_section_urls(
@@ -134,6 +182,46 @@ def _find_website_href(soup: BeautifulSoup) -> str:
     return ""
 
 
+def parse_country_details(html: Optional[str], page_url: str) -> Dict[str, Any]:
+    code = country_code_from_country_url(page_url)
+    empty: Dict[str, Any] = {
+        "country_code": code,
+        "country_name": None,
+        "url": page_url,
+        "email": "",
+        "website": "",
+        "social_links": {},
+    }
+    if not html:
+        return empty
+
+    try:
+        soup = BeautifulSoup(html, "html.parser")
+    except Exception:
+        return empty
+
+    try:
+        h1 = soup.select_one("h1.page-header")
+        name = clean_text(safe_text(h1))
+        if name:
+            empty["country_name"] = name
+        if not empty["country_name"]:
+            title_tag = soup.find("title")
+            raw = clean_text(safe_text(title_tag))
+            if raw:
+                empty["country_name"] = raw.split("|")[0].strip() if "|" in raw else raw
+
+        email_node = soup.select_one("div.field--name-field-email div.field--item")
+        empty["email"] = clean_text(safe_text(email_node))
+
+        empty["website"] = _find_website_href(soup)
+        empty["social_links"] = _collect_social_links(soup)
+    except (AttributeError, TypeError, KeyError):
+        pass
+
+    return empty
+
+
 def parse_section_details(html: Optional[str], page_url: str) -> Dict[str, Any]:
     empty: Dict[str, Any] = {
         "section_name": None,
@@ -199,11 +287,47 @@ def parse_section_details(html: Optional[str], page_url: str) -> Dict[str, Any]:
     return empty
 
 
-async def scrape_all_sections(limit: Optional[int] = None) -> List[Dict[str, Any]]:
+async def scrape_all_countries(limit: int = 0) -> List[Dict[str, Any]]:
+    sem = asyncio.Semaphore(1)
+    async with create_async_client(1) as client:
+        urls = await get_all_country_urls(client, sem)
+        if limit > 0:
+            urls = urls[:limit]
+        total = len(urls)
+        results: List[Dict[str, Any]] = []
+
+        for index, url in enumerate(urls, start=1):
+            print(f"[{index}/{total}] Scraping country {url}...")
+            if index > 1:
+                await asyncio.sleep(random.uniform(1, 2.5))
+            try:
+                html = await fetch_html_async(client, url, sem)
+            except Exception as exc:
+                print(f"Fetch error for {url}: {exc}")
+                html = None
+
+            if html is None:
+                row = parse_country_details("", url)
+                row["error"] = "fetch_failed"
+                results.append(row)
+                continue
+
+            try:
+                results.append(parse_country_details(html, url))
+            except Exception as exc:
+                print(f"Parse error for {url}: {exc}")
+                row = parse_country_details("", url)
+                row["error"] = "parse_failed"
+                results.append(row)
+
+        return results
+
+
+async def scrape_all_sections(limit: int = 0) -> List[Dict[str, Any]]:
     sem = asyncio.Semaphore(1)
     async with create_async_client(1) as client:
         urls = await get_all_section_urls(client, sem)
-        if limit is not None:
+        if limit > 0:
             urls = urls[:limit]
         total = len(urls)
         results: List[Dict[str, Any]] = []
@@ -237,12 +361,42 @@ async def scrape_all_sections(limit: Optional[int] = None) -> List[Dict[str, Any
         return results
 
 
-async def main() -> None:
-    out = await scrape_all_sections()
-    path = DEFAULT_SECTIONS_JSON
-    path.write_text(json.dumps(out, indent=4, ensure_ascii=False), encoding="utf-8")
-    print(f"Wrote {len(out)} sections to {path}")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Scrape ESN country and section data from accounts.esn.org",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["all", "countries", "sections"],
+        default="all",
+        help="What to scrape (default: all).",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help="Max URLs to process per scraper; 0 means no limit.",
+    )
+    return parser.parse_args()
+
+
+async def run_cli(args: argparse.Namespace) -> None:
+    if args.mode in ("all", "countries"):
+        print("Starting country scraping...")
+        countries = await scrape_all_countries(args.limit)
+        path = ESN_COUNTRIES_JSON
+        with path.open("w", encoding="utf-8") as f:
+            json.dump(countries, f, indent=4, ensure_ascii=False)
+        print(f"Saved {len(countries)} countries to {path}")
+
+    if args.mode in ("all", "sections"):
+        print("Starting section scraping...")
+        sections = await scrape_all_sections(args.limit)
+        path = ESN_SECTIONS_JSON
+        with path.open("w", encoding="utf-8") as f:
+            json.dump(sections, f, indent=4, ensure_ascii=False)
+        print(f"Saved {len(sections)} sections to {path}")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(run_cli(parse_args()))

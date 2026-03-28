@@ -1,0 +1,482 @@
+[
+    {
+        "country_code": "AL",
+        "country_name": "ESN Albania",
+        "url": "https://accounts.esn.org/country/al",
+        "email": "albania-admin@esn.org",
+        "website": "",
+        "social_links": {}
+    },
+    {
+        "country_code": "AM",
+        "country_name": "ESN Armenia",
+        "url": "https://accounts.esn.org/country/am",
+        "email": "esnarmenia@gmail.com",
+        "website": "",
+        "social_links": {
+            "facebook": "https://www.facebook.com/groups/2886580018046404",
+            "instagram": "https://www.instagram.com/esn.armenia/"
+        }
+    },
+    {
+        "country_code": "AT",
+        "country_name": "ESN Austria",
+        "url": "https://accounts.esn.org/country/at",
+        "email": "austria@esn.org",
+        "website": "https://www.esnaustria.org/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNaustria/",
+            "instagram": "https://www.instagram.com/esn_austria/"
+        }
+    },
+    {
+        "country_code": "AZ",
+        "country_name": "ESN Azerbaijan",
+        "url": "https://accounts.esn.org/country/az",
+        "email": "communication@esnazerbaijan.org",
+        "website": "http://esn.az",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnazerbaijan",
+            "instagram": "https://www.instagram.com/esn_azerbaijan/",
+            "twitter": "https://twitter.com/esn_azerbaijan?lang=en"
+        }
+    },
+    {
+        "country_code": "BA",
+        "country_name": "ESN Bosnia and Herzegovina",
+        "url": "https://accounts.esn.org/country/ba",
+        "email": "bih-admin@esn.org",
+        "website": "https://esn.ba/",
+        "social_links": {
+            "instagram": "http://www.instagram.com/esnbih"
+        }
+    },
+    {
+        "country_code": "BE",
+        "country_name": "ESN Belgium",
+        "url": "https://accounts.esn.org/country/be",
+        "email": "belgium@esnbelgium.org",
+        "website": "http://www.esnbelgium.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esn.belgium/",
+            "instagram": "https://www.instagram.com/esnbelgium/?utm_medium=copy_link"
+        }
+    },
+    {
+        "country_code": "BG",
+        "country_name": "ESN Bulgaria",
+        "url": "https://accounts.esn.org/country/bg",
+        "email": "bulgaria@esn.org",
+        "website": "http://www.esnbg.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnbulgaria/",
+            "instagram": "https://www.instagram.com/esn_bulgaria/?hl=bg"
+        }
+    },
+    {
+        "country_code": "CH",
+        "country_name": "ESN Switzerland",
+        "url": "https://accounts.esn.org/country/ch",
+        "email": "nr@esn.ch",
+        "website": "https://www.esn.ch",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNSwitzerland",
+            "instagram": "https://www.instagram.com/esn_ch/",
+            "twitter": "https://twitter.com/ESN_CH"
+        }
+    },
+    {
+        "country_code": "CY",
+        "country_name": "ESN Cyprus",
+        "url": "https://accounts.esn.org/country/cy",
+        "email": "infoevents.esnnicosia@gmail.com",
+        "website": "http://www.esncy.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNcyprus",
+            "instagram": "https://www.instagram.com/esnnicosia/"
+        }
+    },
+    {
+        "country_code": "CZ",
+        "country_name": "ESN Czech Republic",
+        "url": "https://accounts.esn.org/country/cz",
+        "email": "czech_republic@esn.org",
+        "website": "https://www.esncz.org/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esncz",
+            "instagram": "https://www.instagram.com/esn_cz/",
+            "twitter": "https://twitter.com/esn_cz?s=20"
+        }
+    },
+    {
+        "country_code": "DE",
+        "country_name": "ESN Germany",
+        "url": "https://accounts.esn.org/country/de",
+        "email": "board@esn-germany.de",
+        "website": "http://www.esn-germany.de",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esngermany/",
+            "instagram": "https://www.instagram.com/esngermany/?hl=de",
+            "twitter": "https://twitter.com/esngermany"
+        }
+    },
+    {
+        "country_code": "DK",
+        "country_name": "ESN Denmark",
+        "url": "https://accounts.esn.org/country/dk",
+        "email": "info@esndenmark.org",
+        "website": "http://www.esndenmark.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esndenmark",
+            "instagram": "https://www.instagram.com/esndenmark/"
+        }
+    },
+    {
+        "country_code": "EE",
+        "country_name": "ESN Estonia",
+        "url": "https://accounts.esn.org/country/ee",
+        "email": "national.board@esn.ee",
+        "website": "http://www.esn.ee/estonia",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESN.Estonia/",
+            "instagram": "https://www.instagram.com/esn_estonia/"
+        }
+    },
+    {
+        "country_code": "ES",
+        "country_name": "ESN Spain",
+        "url": "https://accounts.esn.org/country/es",
+        "email": "spain@esn.org",
+        "website": "http://esn-spain.org",
+        "social_links": {
+            "facebook": "https://facebook.com/erasmusstudentnetworkspain",
+            "instagram": "https://instagram.com/esnspain/",
+            "twitter": "https://twitter.com/ESNSpain"
+        }
+    },
+    {
+        "country_code": "FI",
+        "country_name": "ESN Finland",
+        "url": "https://accounts.esn.org/country/fi",
+        "email": "board@esnfinland.eu",
+        "website": "http://www.esnfinland.eu",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnfinland",
+            "instagram": "https://www.instagram.com/esnfinland/",
+            "twitter": "https://twitter.com/esnfinland"
+        }
+    },
+    {
+        "country_code": "FR",
+        "country_name": "ESN France",
+        "url": "https://accounts.esn.org/country/fr",
+        "email": "contact@ixesn.fr",
+        "website": "http://www.esnfrance.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNFrance",
+            "instagram": "https://www.instagram.com/esnfrance/",
+            "twitter": "https://twitter.com/ESNFrance"
+        }
+    },
+    {
+        "country_code": "GB",
+        "country_name": "ESN UK",
+        "url": "https://accounts.esn.org/country/gb",
+        "email": "national_board@esnuk.org",
+        "website": "http://www.esnuk.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNUnitedKingdom/",
+            "instagram": "https://instagram.com/esn_uk",
+            "twitter": "https://twitter.com/ESNuk"
+        }
+    },
+    {
+        "country_code": "GE",
+        "country_name": "ESN Georgia",
+        "url": "https://accounts.esn.org/country/ge",
+        "email": "georgia@esn.org",
+        "website": "",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESN.Tbilisi.ISU"
+        }
+    },
+    {
+        "country_code": "GR",
+        "country_name": "ESN Greece",
+        "url": "https://accounts.esn.org/country/gr",
+        "email": "info@esngreece.gr",
+        "website": "https://esngreece.gr",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ErasmusStudentNetworkGreece/",
+            "instagram": "https://www.instagram.com/esngreece/",
+            "twitter": "https://twitter.com/esngreece"
+        }
+    },
+    {
+        "country_code": "HR",
+        "country_name": "ESN Croatia",
+        "url": "https://accounts.esn.org/country/hr",
+        "email": "info@esn.hr",
+        "website": "http://www.esn.hr",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNCroatia/",
+            "instagram": "https://www.instagram.com/esncroatia/?hl=en"
+        }
+    },
+    {
+        "country_code": "HU",
+        "country_name": "ESN Hungary",
+        "url": "https://accounts.esn.org/country/hu",
+        "email": "hungary@esn.org",
+        "website": "http://www.esn.hu",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esn.hu",
+            "instagram": "https://www.instagram.com/esnhungary/"
+        }
+    },
+    {
+        "country_code": "IE",
+        "country_name": "ESN Ireland",
+        "url": "https://accounts.esn.org/country/ie",
+        "email": "ireland@esn.org",
+        "website": "http://www.esnireland.ie",
+        "social_links": {
+            "facebook": "https://facebook.com/ErasmusStudentNetworkIreland/",
+            "instagram": "https://www.instagram.com/esnireland/",
+            "twitter": "https://twitter.com/esnireland"
+        }
+    },
+    {
+        "country_code": "IS",
+        "country_name": "ESN Iceland",
+        "url": "https://accounts.esn.org/country/is",
+        "email": "iceland@esn.org",
+        "website": "http://www.esn.is",
+        "social_links": {}
+    },
+    {
+        "country_code": "IT",
+        "country_name": "ESN Italy",
+        "url": "https://accounts.esn.org/country/it",
+        "email": "info@esn.it",
+        "website": "https://esn.it/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnitalia/",
+            "instagram": "https://www.instagram.com/esnitalia/",
+            "twitter": "https://twitter.com/ESNITALIA"
+        }
+    },
+    {
+        "country_code": "JO",
+        "country_name": "ESN Jordan",
+        "url": "https://accounts.esn.org/country/jo",
+        "email": "jordan-admin@esn.org",
+        "website": "",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNIrbidCS",
+            "instagram": "https://www.instagram.com/esnirbid"
+        }
+    },
+    {
+        "country_code": "KZ",
+        "country_name": "ESN Kazakhstan",
+        "url": "https://accounts.esn.org/country/kz",
+        "email": "kazakhstan-admin@esn.org",
+        "website": "https://uib.edu.kz",
+        "social_links": {
+            "facebook": "https://www.facebook.com/isnalmatykz",
+            "instagram": "https://www.instagram.com/esn_almaty"
+        }
+    },
+    {
+        "country_code": "LI",
+        "country_name": "ESN Liechtenstein",
+        "url": "https://accounts.esn.org/country/li",
+        "email": "office@esn.li",
+        "website": "http://esn.li",
+        "social_links": {}
+    },
+    {
+        "country_code": "LT",
+        "country_name": "ESN Lithuania",
+        "url": "https://accounts.esn.org/country/lt",
+        "email": "lithuania@esn.org",
+        "website": "https://www.esn.lt",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnlithuania",
+            "instagram": "https://www.instagram.com/esn_lithuania/"
+        }
+    },
+    {
+        "country_code": "LU",
+        "country_name": "ESN Luxembourg",
+        "url": "https://accounts.esn.org/country/lu",
+        "email": "luxembourg@esn.org",
+        "website": "http://esn.lu/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnluxembourg/",
+            "instagram": "https://www.instagram.com/esnluxembourg/"
+        }
+    },
+    {
+        "country_code": "LV",
+        "country_name": "ESN Latvia",
+        "url": "https://accounts.esn.org/country/lv",
+        "email": "latvia@esn.org",
+        "website": "http://esn.lv",
+        "social_links": {
+            "facebook": "https://facebook.com/ESNlatvia",
+            "instagram": "https://www.instagram.com/esn_latvia/"
+        }
+    },
+    {
+        "country_code": "MD",
+        "country_name": "ESN Moldova",
+        "url": "https://accounts.esn.org/country/md",
+        "email": "moldova@esn.org",
+        "website": "https://esn-md.b-cdn.net/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnchisinaucs?mibextid=wwXIfr&rdid=Hn4Z8l95BP7qj5uR&sh…",
+            "instagram": "https://www.instagram.com/esn.chisinau/?igsh=MXd0ZWZ0b3lpdm04Yw%3D%3D"
+        }
+    },
+    {
+        "country_code": "ME",
+        "country_name": "ESN Montenegro",
+        "url": "https://accounts.esn.org/country/me",
+        "email": "montenegro-admin@esn.org",
+        "website": "",
+        "social_links": {}
+    },
+    {
+        "country_code": "MT",
+        "country_name": "ESN Malta",
+        "url": "https://accounts.esn.org/country/mt",
+        "email": "malta@esn.org",
+        "website": "",
+        "social_links": {}
+    },
+    {
+        "country_code": "NL",
+        "country_name": "ESN the Netherlands",
+        "url": "https://accounts.esn.org/country/nl",
+        "email": "info@esn-nl.org",
+        "website": "http://esn-nl.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esnnl/",
+            "instagram": "https://www.instagram.com/esn_nl/"
+        }
+    },
+    {
+        "country_code": "NO",
+        "country_name": "ESN Norway",
+        "url": "https://accounts.esn.org/country/no",
+        "email": "norway@esn.org",
+        "website": "http://www.esn.no",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNNorway/",
+            "instagram": "https://www.instagram.com/esnnorway/"
+        }
+    },
+    {
+        "country_code": "PL",
+        "country_name": "ESN Poland",
+        "url": "https://accounts.esn.org/country/pl",
+        "email": "board@esn.pl",
+        "website": "http://esn.pl",
+        "social_links": {
+            "facebook": "http://facebook.com/esn.poland",
+            "instagram": "https://www.instagram.com/esn_poland",
+            "twitter": "https://twitter.com/ESNpoland"
+        }
+    },
+    {
+        "country_code": "PT",
+        "country_name": "ESN Portugal",
+        "url": "https://accounts.esn.org/country/pt",
+        "email": "portugal@esn.org",
+        "website": "http://www.esnportugal.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNportugal/",
+            "instagram": "https://www.instagram.com/esnportugal/",
+            "twitter": "https://twitter.com/ESNportugal"
+        }
+    },
+    {
+        "country_code": "RO",
+        "country_name": "ESN Romania",
+        "url": "https://accounts.esn.org/country/ro",
+        "email": "board@esn.ro",
+        "website": "http://www.esn.ro",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESN.Romania/",
+            "instagram": "https://www.instagram.com/esn.romania/",
+            "twitter": "https://twitter.com/esnromania"
+        }
+    },
+    {
+        "country_code": "RS",
+        "country_name": "ESN Serbia",
+        "url": "https://accounts.esn.org/country/rs",
+        "email": "board@esn.rs",
+        "website": "http://www.esn.rs/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNSerbia/",
+            "instagram": "https://www.instagram.com/esn.serbia/?hl=en"
+        }
+    },
+    {
+        "country_code": "SE",
+        "country_name": "ESN Sweden",
+        "url": "https://accounts.esn.org/country/se",
+        "email": "nbs@esnsweden.org",
+        "website": "https://esnsweden.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNSweden",
+            "instagram": "https://www.instagram.com/esn_sweden/"
+        }
+    },
+    {
+        "country_code": "SI",
+        "country_name": "ESN Slovenia",
+        "url": "https://accounts.esn.org/country/si",
+        "email": "info@esn-slovenia.org",
+        "website": "http://www.esn-slovenia.org/",
+        "social_links": {
+            "facebook": "https://www.facebook.com/profile.php?id=61551532850337",
+            "instagram": "https://instagram.com/esnslovenia?igshid=MzRlODBiNWFlZA%3D%3D"
+        }
+    },
+    {
+        "country_code": "SK",
+        "country_name": "ESN Slovakia",
+        "url": "https://accounts.esn.org/country/sk",
+        "email": "board@esn.sk",
+        "website": "http://www.esn.sk",
+        "social_links": {
+            "facebook": "https://www.facebook.com/ESNSlovakia/",
+            "instagram": "https://www.instagram.com/esn_slovakia/",
+            "twitter": "https://twitter.com/ESNSlovakia_"
+        }
+    },
+    {
+        "country_code": "TR",
+        "country_name": "ESN Türkiye",
+        "url": "https://accounts.esn.org/country/tr",
+        "email": "info@esnturkey.org",
+        "website": "http://www.esnturkey.org",
+        "social_links": {
+            "facebook": "https://www.facebook.com/esntr/?locale=tr_TR",
+            "instagram": "https://www.instagram.com/esnturkiye/",
+            "twitter": "https://x.com/esnturkiye"
+        }
+    },
+    {
+        "country_code": "UA",
+        "country_name": "ESN Ukraine",
+        "url": "https://accounts.esn.org/country/ua",
+        "email": "ukraine@esn.org",
+        "website": "https://esnukraine.org/",
+        "social_links": {}
+    }
+]
