@@ -39,12 +39,12 @@ logger: logging.Logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-ACTIVITIES_BASE: str = "https://activities.esn.org"
+ACTIVITIES_BASE: str = "https://activities.esn.org/activities"
 
 
 def _feed_listing_url(page: int) -> str:
     """Build activities feed URL for a given zero-based page index."""
-    return f"{ACTIVITIES_BASE}/?page={page}"
+    return f"{ACTIVITIES_BASE}?page={page}"
 
 
 # Regex used by feed parsing
