@@ -187,7 +187,7 @@ class EventScraper(BaseScraper):
     3. ``upsert_to_db`` – upsert into ``esn_events``; conflict on ``event_page_link``.
     """
 
-    DEFAULT_CONCURRENCY: int = 20
+    DEFAULT_CONCURRENCY: int = 30
     UPSERT_BATCH_SIZE: int = 50
 
     def __init__(
@@ -402,7 +402,7 @@ class EventScraper(BaseScraper):
         client: httpx.AsyncClient,
         semaphore: asyncio.Semaphore,
     ) -> List[Dict[str, Any]]:
-        """Scrape the activities listing page by page until the feed ends.
+        """Scrape the activities listing page by page in concurrent batches until the feed ends.
 
         Order follows ascending ``page`` indices; duplicates are dropped via
         ``seen_links`` on ``event_page_link``.
@@ -412,13 +412,13 @@ class EventScraper(BaseScraper):
         page_number = self._start_page
         pages_fetched = 0
         capped_range = self._end_page > self._start_page
+        
+        batch_size = min(10, self._concurrency)
+        stop_fetching = False
 
-        while True:
-            if capped_range and page_number > self._end_page:
-                break
-
-            url = _feed_listing_url(page_number)
-            self._logger.debug("Fetching feed page %d …", page_number)
+        async def _fetch_and_parse_page(page: int) -> Tuple[int, List[Dict[str, Any]]]:
+            url = _feed_listing_url(page)
+            self._logger.debug("Fetching feed page %d …", page)
             html = await fetch_html_async(
                 client,
                 url,
@@ -428,42 +428,52 @@ class EventScraper(BaseScraper):
                 jitter_ms=self._jitter_ms,
             )
             if not html:
-                self._logger.info(
-                    "Feed page %d: no HTML (empty response or non-200); stopping.",
-                    page_number,
-                )
-                break
-
+                return (page, [])
             page_events = await asyncio.to_thread(_parse_feed_page, html)
+            return (page, page_events)
 
-            if self._stop_on_empty and not page_events:
-                self._logger.info(
-                    "Page %d returned 0 events; stopping (stop_on_empty).",
-                    page_number,
-                )
+        while not stop_fetching:
+            if capped_range and page_number > self._end_page:
                 break
-
-            for event in page_events:
-                link = event.get("event_page_link")
-                if link and link in seen_links:
-                    continue
-                if link:
-                    seen_links.add(link)
-                all_events.append(event)
-
-            pages_fetched += 1
-            self._logger.info(
-                "Discovered %d urls across %d pages so far…",
-                len(seen_links),
-                pages_fetched,
-            )
-            self._logger.info(
-                "Page %d: %d events on this page.",
-                page_number,
-                len(page_events),
-            )
-
-            page_number += 1
+                
+            current_batch_size = batch_size
+            if capped_range:
+                current_batch_size = min(batch_size, self._end_page - page_number + 1)
+                
+            tasks = [
+                _fetch_and_parse_page(p)
+                for p in range(page_number, page_number + current_batch_size)
+            ]
+            
+            results = await asyncio.gather(*tasks)
+            results.sort(key=lambda r: r[0])
+            
+            for page, page_events in results:
+                if not page_events:
+                    self._logger.info("Feed page %d: no HTML or 0 events.", page)
+                    if self._stop_on_empty:
+                        self._logger.info("Stopping feed discovery due to empty page (stop_on_empty).")
+                        stop_fetching = True
+                        break
+                
+                for event in page_events:
+                    link = event.get("event_page_link")
+                    if link and link in seen_links:
+                        continue
+                    if link:
+                        seen_links.add(link)
+                    all_events.append(event)
+                
+                pages_fetched += 1
+                self._logger.info(
+                    "Page %d: %d events. (Total unique URLs: %d, Pages fetched: %d)",
+                    page,
+                    len(page_events),
+                    len(seen_links),
+                    pages_fetched,
+                )
+            
+            page_number += current_batch_size
 
         return all_events
 

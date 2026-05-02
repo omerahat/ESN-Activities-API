@@ -247,30 +247,30 @@ There is no `city` query parameter on `/api/v1/events`; use `organizer_section` 
 
 ### Examples (`curl`)
 
-Replace the host with your deployment URL (local default is often `http://localhost:8000`).
+Replace the host with your deployment URL (local default is often `http://localhost:8000`), or use the live API at `https://esn-activities-api.onrender.com`.
 
 **1. Health and last sync**
 
 ```bash
-curl -s "http://localhost:8000/api/v1/health"
+curl -s "https://esn-activities-api.onrender.com/api/v1/health"
 ```
 
 **2. Next five upcoming events for one organising section**
 
 ```bash
-curl -s "http://localhost:8000/api/v1/events?is_upcoming=true&organizer_section=ESN%20Example%20City&limit=5&skip=0"
+curl -s "https://esn-activities-api.onrender.com/api/v1/events?is_upcoming=true&organizer_section=ESN%20Example%20City&limit=5&skip=0"
 ```
 
 **3. Second page of events (20 per page) with no extra filters**
 
 ```bash
-curl -s "http://localhost:8000/api/v1/events?skip=20&limit=20"
+curl -s "https://esn-activities-api.onrender.com/api/v1/events?skip=20&limit=20"
 ```
 
 **4. Sections whose city name contains a substring**
 
 ```bash
-curl -s "http://localhost:8000/api/v1/sections?city=Berlin&limit=10"
+curl -s "https://esn-activities-api.onrender.com/api/v1/sections?city=Berlin&limit=10"
 ```
 
 **Disclaimer:** This is an unofficial API created for educational purposes. It is not affiliated with, maintained, or endorsed by ESN (Erasmus Student Network) International. All data belongs to activities.esn.org.

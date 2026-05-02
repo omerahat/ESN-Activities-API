@@ -98,8 +98,8 @@ def build_parser() -> argparse.ArgumentParser:
     scrape_parser.add_argument(
         "--concurrency",
         type=int,
-        default=10,
-        help="Max concurrent HTTP requests (events). Default: 10.",
+        default=30,
+        help="Max concurrent HTTP requests (events). Default: 30.",
     )
     scrape_parser.add_argument(
         "--continue-on-empty",
