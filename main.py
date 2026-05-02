@@ -194,4 +194,5 @@ def get_events(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    debug_mode = os.environ.get("DEBUG", "false").lower() == "true"
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=debug_mode)
